@@ -25,7 +25,8 @@ body{margin:0}
   --tint:#007AFF; --on-tint:#FFFFFF; --tint-soft:rgba(0,122,255,.13);
   --green:#34C759; --green-text:#248A3D; --red:#FF3B30; --orange:#FF9500; --orange-text:#C93400;
   --thumb:#FFFFFF; --press:rgba(0,0,0,.05);
-  --glass:rgba(255,255,255,.74); --glass-sel:rgba(0,0,0,.06);
+  --glass:rgba(255,255,255,.74); --glass-sel:rgba(0,0,0,.07);
+  --lens:rgba(255,255,255,.22); --lens-rim:inset 0 0 0 1px rgba(255,255,255,.95),inset 3px 3px 4px -2px rgba(255,80,200,.45),inset -3px -3px 4px -2px rgba(30,170,255,.5),0 10px 26px rgba(0,0,0,.16),0 0 0 .5px rgba(0,0,0,.08);
   --glass-shadow:0 10px 34px rgba(0,0,0,.10),0 0 0 .5px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.9);
   --scrim:rgba(0,0,0,.20); --nav-fade:rgba(242,242,247,.72);
   --font:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -42,7 +43,8 @@ body{margin:0}
   --tint:#0A84FF; --on-tint:#FFFFFF; --tint-soft:rgba(10,132,255,.20);
   --green:#30D158; --green-text:#30D158; --red:#FF453A; --orange:#FF9F0A; --orange-text:#FF9F0A;
   --thumb:#636366; --press:rgba(255,255,255,.07);
-  --glass:rgba(40,40,44,.72); --glass-sel:rgba(255,255,255,.10);
+  --glass:rgba(40,40,44,.72); --glass-sel:rgba(255,255,255,.12);
+  --lens:rgba(255,255,255,.10); --lens-rim:inset 0 0 0 1px rgba(255,255,255,.35),inset 3px 3px 4px -2px rgba(255,80,200,.5),inset -3px -3px 4px -2px rgba(30,170,255,.55),0 10px 26px rgba(0,0,0,.5);
   --glass-shadow:0 10px 34px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.08);
   --scrim:rgba(0,0,0,.45); --nav-fade:rgba(0,0,0,.70);
   color-scheme:dark;
@@ -54,7 +56,8 @@ body{margin:0}
   --tint:#0A84FF; --on-tint:#FFFFFF; --tint-soft:rgba(10,132,255,.20);
   --green:#30D158; --green-text:#30D158; --red:#FF453A; --orange:#FF9F0A; --orange-text:#FF9F0A;
   --thumb:#636366; --press:rgba(255,255,255,.07);
-  --glass:rgba(40,40,44,.72); --glass-sel:rgba(255,255,255,.10);
+  --glass:rgba(40,40,44,.72); --glass-sel:rgba(255,255,255,.12);
+  --lens:rgba(255,255,255,.10); --lens-rim:inset 0 0 0 1px rgba(255,255,255,.35),inset 3px 3px 4px -2px rgba(255,80,200,.5),inset -3px -3px 4px -2px rgba(30,170,255,.55),0 10px 26px rgba(0,0,0,.5);
   --glass-shadow:0 10px 34px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.08);
   --scrim:rgba(0,0,0,.45); --nav-fade:rgba(0,0,0,.70);
   color-scheme:dark;
@@ -186,13 +189,19 @@ button.last:active{opacity:.5}
 .dock-in{max-width:440px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:10px}
 .dock .gbtn{height:50px;border-radius:25px;font-size:17px}
 
-/* ---------- floating glass tab bar ---------- */
+/* ---------- Liquid Glass tab bar: floating capsule; the selection pill lifts into a lens when pressed or dragged ---------- */
 .tabbar{position:fixed;z-index:9;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));bottom:var(--tabbar-b);pointer-events:none}
-.tabbar-in{pointer-events:auto;max-width:440px;margin:0 auto;height:64px;border-radius:32px;padding:4px;display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--label);font-size:10px;line-height:12px;letter-spacing:.1px;font-weight:600;transition:background 200ms ease,color 160ms ease}
-.tab svg{width:26px;height:26px;transition:transform 160ms var(--ease-out)}
-.tab:active svg{transform:scale(.88)}
-.tab[aria-selected="true"]{background:var(--glass-sel);color:var(--tint)}
+.tabbar-in{pointer-events:auto;position:relative;max-width:440px;margin:0 auto;height:64px;border-radius:32px;padding:4px;display:grid;grid-template-columns:repeat(4,1fr);touch-action:none;-webkit-user-select:none;user-select:none}
+.tab-pill{position:absolute;z-index:0;top:4px;left:4px;height:56px;width:calc((100% - 8px) / 4);border-radius:28px;background:var(--glass-sel);translate:calc(var(--x,0) * 1px) 0;scale:1;transition:translate 460ms cubic-bezier(.32,1.28,.5,1),scale 320ms cubic-bezier(.32,1.28,.5,1),background 220ms ease,box-shadow 220ms ease;pointer-events:none}
+.tabbar-in.pressing .tab-pill{scale:1.2 1.32;background:var(--lens);-webkit-backdrop-filter:blur(1.5px) saturate(1.9) brightness(1.06);backdrop-filter:blur(1.5px) saturate(1.9) brightness(1.06);box-shadow:var(--lens-rim)}
+.tabbar-in.dragging .tab-pill{transition:scale 320ms cubic-bezier(.32,1.28,.5,1),background 220ms ease,box-shadow 220ms ease}
+.tabbar-in.no-anim .tab-pill{transition:none}
+.tab{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--label);font-size:10px;line-height:12px;letter-spacing:.1px;font-weight:600;transition:color 160ms ease}
+.tab svg,.tab span{transition:transform 280ms cubic-bezier(.32,1.28,.5,1)}
+.tab svg{width:26px;height:26px}
+.tab[aria-selected="true"],.tab.hot{color:var(--tint)}
+.tabbar-in.pressing .tab[aria-selected="true"]:not(.hot){color:var(--label)}
+.tab.hot svg,.tab.hot span{transform:scale(1.14)}
 
 /* ---------- sheets (floating, iOS 26) ---------- */
 #sheet-root{position:fixed;inset:0;z-index:20}
@@ -236,6 +245,8 @@ body.dock-on #toast{bottom:calc(var(--tabbar-b) + 136px)}
   .seg .thumb,.nav-title{transition:opacity 160ms ease}
   .nav-title{transform:none}
   .gbtn:active,.cap:active,.check:active i,.tab:active svg,.circ:active,.days button:active{transform:none}
+  .tabbar-in.pressing .tab-pill{scale:1} .tab.hot svg,.tab.hot span{transform:none}
+  .tab-pill{transition:translate 200ms ease,background 200ms ease,box-shadow 200ms ease}
 }
 @media (prefers-reduced-transparency:reduce){
   .glass{background:var(--cell);-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -252,11 +263,11 @@ body.dock-on #toast{bottom:calc(var(--tabbar-b) + 136px)}
 <header class="nav" id="nav"><div class="nav-in"><div class="nav-l" id="nav-l"></div><div class="nav-title" id="nav-title"></div><div class="nav-r" id="nav-r"></div></div></header>
 <main class="wrap" id="view" aria-live="polite"></main>
 <div class="dock" id="dock" hidden></div>
-<nav class="tabbar" aria-label="Sections"><div class="tabbar-in glass" role="tablist">
-  <button class="tab" role="tab" data-tab="diet" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v5a2.5 2.5 0 0 0 5 0V3M7.5 3v18"/><path d="M17.5 3c-2.4 1.2-3.6 4.4-3.6 8.3 0 1.1.7 1.8 1.6 1.8h2Z" fill="currentColor"/><path d="M17.5 3v18"/></svg>Diet</button>
-  <button class="tab" role="tab" data-tab="train" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="1.2" y="9" width="3" height="6" rx="1.2"/><rect x="4.4" y="5.8" width="3.6" height="12.4" rx="1.5"/><rect x="8" y="10.8" width="8" height="2.4" rx=".7"/><rect x="16" y="5.8" width="3.6" height="12.4" rx="1.5"/><rect x="19.8" y="9" width="3" height="6" rx="1.2"/></svg>Training</button>
-  <button class="tab" role="tab" data-tab="skin" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4c3.7 4.4 6.7 8.2 6.7 11.6a6.7 6.7 0 0 1-13.4 0c0-3.4 3-7.2 6.7-11.6Z"/></svg>Skin</button>
-  <button class="tab" role="tab" data-tab="upkeep" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.6l1.7 1.7 3.1-3.4M3.5 13.6l1.7 1.7 3.1-3.4M11.5 7h9M11.5 14h9M11.5 20.5h9"/><circle cx="5.5" cy="20.5" r="1.2" fill="currentColor" stroke="none"/></svg>Upkeep</button>
+<nav class="tabbar" aria-label="Sections"><div class="tabbar-in glass no-anim" role="tablist"><span class="tab-pill" aria-hidden="true"></span>
+  <button class="tab" role="tab" data-tab="diet" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v5a2.5 2.5 0 0 0 5 0V3M7.5 3v18"/><path d="M17.5 3c-2.4 1.2-3.6 4.4-3.6 8.3 0 1.1.7 1.8 1.6 1.8h2Z" fill="currentColor"/><path d="M17.5 3v18"/></svg><span>Diet</span></button>
+  <button class="tab" role="tab" data-tab="train" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="1.2" y="9" width="3" height="6" rx="1.2"/><rect x="4.4" y="5.8" width="3.6" height="12.4" rx="1.5"/><rect x="8" y="10.8" width="8" height="2.4" rx=".7"/><rect x="16" y="5.8" width="3.6" height="12.4" rx="1.5"/><rect x="19.8" y="9" width="3" height="6" rx="1.2"/></svg><span>Training</span></button>
+  <button class="tab" role="tab" data-tab="skin" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4c3.7 4.4 6.7 8.2 6.7 11.6a6.7 6.7 0 0 1-13.4 0c0-3.4 3-7.2 6.7-11.6Z"/></svg><span>Skin</span></button>
+  <button class="tab" role="tab" data-tab="upkeep" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.6l1.7 1.7 3.1-3.4M3.5 13.6l1.7 1.7 3.1-3.4M11.5 7h9M11.5 14h9M11.5 20.5h9"/><circle cx="5.5" cy="20.5" r="1.2" fill="currentColor" stroke="none"/></svg><span>Upkeep</span></button>
 </div></nav>
 <div id="sheet-root" hidden></div>
 <div id="toast" class="glass" role="status"></div>
@@ -329,13 +340,13 @@ const ICON = {
 };
 
 /* ---------- state ---------- */
-const ROBOT_TASKS = [["Robot vacuum: water tanks",0,1],["Robot vacuum: brushes & sensors",3,2],["Robot vacuum: filter & tank rinse",2,4]];
+const ROBOT_TASKS = [["Robot vacuum: water tanks",0,1],["Robot vacuum: brushes & sensors",0,2],["Robot vacuum: filter & tank rinse",0,4]];
 const SHOP_TASKS = [["Grocery shopping",2,1],["Grocery shopping",4,1]];
 const mkTask = ([name,wd,every]) => ({ id:uid(), name, wd, every, nextDue: nextOnOrAfter(today(),wd), lastDone:null });
 function defaultTasks(){
   return [
-    ["Cut fingernails",1,1],["Trim beard",4,1],["Clean out the fridge",5,4],
-    ["Clean bathroom",6,1],["Haircut",6,3],["Laundry",0,1],["Change bed sheets",0,2],["Cut toenails",0,2],
+    ["Cut fingernails",0,1],["Trim beard",0,1],["Clean out the fridge",0,4],
+    ["Clean bathroom",0,1],["Haircut",0,3],["Laundry",0,1],["Change bed sheets",0,2],["Cut toenails",0,2],
     ...ROBOT_TASKS, ...SHOP_TASKS,
   ].map(mkTask);
 }
@@ -350,11 +361,15 @@ function migrate(st){
     for (const r of SHOP_TASKS) if (!st.tasks.some(x => x.name === r[0] && x.wd === r[1])) st.tasks.push(mkTask(r));
     st.tasksV = 3; migrated = true;
   }
+  if (st.tasksV < 4) {
+    for (const t of st.tasks) if (t.name !== "Grocery shopping" && t.wd !== 0) { t.wd = 0; t.nextDue = nextOnOrAfter(today(), 0); }
+    st.tasksV = 4; migrated = true;
+  }
   return st;
 }
 function defaultState(){
   return {
-    v:1, tasksV:3,
+    v:1, tasksV:4,
     trainDays:[1,3,5],
     skin:{
       am:[{id:uid(),name:"Cleanser",note:"Gentle, rinse with lukewarm water"},{id:uid(),name:"Moisturizer",note:"Light lotion"},{id:uid(),name:"Sunscreen",note:"SPF 30+, last step every morning"}],
@@ -620,6 +635,7 @@ function render(){
   document.getElementById("nav-title").textContent = n.title;
   document.getElementById("nav-r").innerHTML = n.r;
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === ui.tab)));
+  placePill();
   renderDock();
   onScroll();
 }
@@ -785,7 +801,7 @@ function rollDraft(){ if (S.draft && S.draft.date !== today()) { finishWorkout(t
 
 document.addEventListener("click", e => {
   const tab = e.target.closest(".tab");
-  if (tab) { setTab(tab.dataset.tab); return; }
+  if (tab) { if (e.detail === 0) setTab(tab.dataset.tab); return; }
   const el = e.target.closest("[data-act]");
   if (!el || el.closest("#sheet-root")) return;
   const a = el.dataset.act;
@@ -837,6 +853,46 @@ view.addEventListener("keydown", e => {
   if (nx) nx.focus(); else e.target.blur();
 });
 
+/* ---------- Liquid Glass tab bar ---------- */
+const tabBar = document.querySelector(".tabbar-in");
+const tabPill = tabBar.querySelector(".tab-pill");
+const tabBtns = [...tabBar.querySelectorAll(".tab")];
+let tbDrag = null;
+const slotW = () => (tabBar.clientWidth - 8) / tabBtns.length;
+function placePill(i){ if (tbDrag) return; if (i === undefined) i = Math.max(0, tabBtns.findIndex(b => b.dataset.tab === ui.tab)); tabPill.style.setProperty("--x", i * slotW()); }
+function setHot(i){ tabBtns.forEach((b,k) => b.classList.toggle("hot", k === i)); }
+tabBar.addEventListener("pointerdown", e => {
+  if (e.button > 0 || tbDrag) return;
+  const r = tabBar.getBoundingClientRect(), w = slotW();
+  const i = Math.max(0, Math.min(tabBtns.length - 1, Math.floor((e.clientX - r.left - 4) / w)));
+  tbDrag = { id:e.pointerId, x0:e.clientX, left:r.left, w, i, moved:false };
+  tabBar.setPointerCapture(e.pointerId);
+  tabPill.style.setProperty("--x", i * w);          // the lens appears under the finger
+  tabBar.classList.add("pressing"); setHot(i);
+});
+tabBar.addEventListener("pointermove", e => {
+  if (!tbDrag || e.pointerId !== tbDrag.id) return;
+  if (!tbDrag.moved && Math.abs(e.clientX - tbDrag.x0) < 6) return;
+  tbDrag.moved = true; tabBar.classList.add("dragging");   // track the finger 1:1
+  const max = (tabBtns.length - 1) * tbDrag.w;
+  let x = e.clientX - tbDrag.left - 4 - tbDrag.w / 2;
+  if (x < 0) x = -rubber(-x, tbDrag.w); else if (x > max) x = max + rubber(x - max, tbDrag.w);
+  tabPill.style.setProperty("--x", x);
+  tbDrag.i = Math.max(0, Math.min(tabBtns.length - 1, Math.round(x / tbDrag.w)));
+  setHot(tbDrag.i);
+});
+function endTabDrag(e){
+  if (!tbDrag || e.pointerId !== tbDrag.id) return;
+  const { i, w } = tbDrag; tbDrag = null;
+  tabBar.classList.remove("dragging");
+  tabPill.style.setProperty("--x", i * w);           // springs to the nearest tab
+  if (e.type === "pointerup") setTab(TABS[i]);
+  setTimeout(() => { if (tbDrag) return; tabBar.classList.remove("pressing"); setHot(-1); placePill(); }, 190);
+}
+tabBar.addEventListener("pointerup", endTabDrag);
+tabBar.addEventListener("pointercancel", endTabDrag);
+window.addEventListener("resize", () => { tabBar.classList.add("no-anim"); placePill(); requestAnimationFrame(() => tabBar.classList.remove("no-anim")); });
+
 /* ---------- routing ---------- */
 const TABS = ["diet","train","skin","upkeep"];
 function setTab(t){
@@ -849,6 +905,7 @@ window.addEventListener("hashchange", () => setTab(location.hash.slice(1)));
 ui.tab = TABS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "diet";
 rollDraft();
 render();
+requestAnimationFrame(() => requestAnimationFrame(() => tabBar.classList.remove("no-anim")));
 initStorage();
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 setInterval(() => { if ((ui.tab === "upkeep" || ui.tab === "skin") && !isTyping() && sheetRoot.hidden) render(); }, 5 * 60 * 1000);
