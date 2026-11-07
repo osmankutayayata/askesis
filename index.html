@@ -589,16 +589,17 @@ const SKIN = {
     { id:"am-spf",    name:"Photoderm AKN Mat SPF 30", note:"Bioderma" },
   ],
   pm: [
-    { id:"pm-gel",    name:"Effaclar Purifying Foaming Gel", note:"La Roche-Posay · face", skipOn:SHOWER_DAYS },
+    { id:"pm-cleanser", name:"Foaming Cleanser", note:"CeraVe · face", skipOn:SHOWER_DAYS },
     { id:"pm-kelual", name:"Kelual DS cream", note:"Ducray · sides of nose, folds down to your mouth, brows, under mustache and beard" },
     { id:"pm-effh",   name:"Effaclar H Iso-Biome", note:"Anywhere else that feels dry" },
     { id:"pm-sa",     name:"SA Smoothing Cream", note:"CeraVe · arms and thighs" },
     { id:"pm-triakne",name:"Triakne 5%", note:"A dab on individual face pimples only" },
   ],
   shower: [
-    { id:"sh-nizoral",name:"Nizoral 2% shampoo", note:"Scalp, beard, mustache, brows and sides of nose. Keep it out of your eyes." },
-    { id:"sh-triakne",name:"Triakne 5%", note:"Thin layer on your back" },
-    { id:"sh-rinse",  name:"Wait 3–5 minutes, then rinse", note:"Wash the rest of your body meanwhile, then rinse everything with lukewarm water" },
+    { id:"sh-nizoral",name:"Nizoral 2% shampoo", note:"Work it in with your fingertips: scalp, beard, mustache, brows and sides of nose. Keep it out of your eyes." },
+    { id:"sh-triakne",name:"Triakne 5%", note:"Spread a thin layer on your back" },
+    { id:"sh-body",   name:"Foaming Cleanser on your body", note:"CeraVe · with your hands, everywhere except your back" },
+    { id:"sh-rinse",  name:"Rinse after 3–5 minutes", note:"Rinse everything off with lukewarm water" },
   ],
 };
 function skinView(){
@@ -615,7 +616,7 @@ function skinView(){
     const doneN = steps.filter(s => ticks[s.id]).length;
     const now = k === "shower" ? (showerDay ? "Today · " : "Mon, Wed, Fri · ") : (k === "am") === isAM ? "Now · " : "";
     const head = `<div class="sec-h"><h2 class="t-title3">${title[k]}</h2><span class="val t-sub c2">${now}${doneN} of ${steps.length}</span></div>`;
-    const foot = skipped.length ? `<p class="sec-f t-foot">${skipped.map(s => esc(s.name)).join(", ")} is skipped today because it’s a shower day.</p>` : "";
+    const foot = skipped.length ? `<p class="sec-f t-foot">${skipped.map(s => esc(s.name)).join(", ")} is skipped today, because the shower already washed your face.</p>` : "";
     return `<section class="sec">${head}<div class="list">${steps.map(s => {
       const on = !!ticks[s.id];
       return `<div class="cell chk${on?" done":""}">${checkBtn("skin-tick", `data-k="${k}" data-id="${s.id}"`, on, s.name)}
