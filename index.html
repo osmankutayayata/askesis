@@ -605,16 +605,19 @@ const SKIN = {
 function skinView(){
   const wd = new Date().getDay();
   const showerDay = SHOWER_DAYS.includes(wd);
-  const isAM = new Date().getHours() < 15;
+  const hour = new Date().getHours();
   const dd = day();
-  const keys = isAM ? ["am", "shower", "pm"] : ["shower", "pm", "am"];
+  // the day in order: morning, then the 7 pm shower on Mon/Wed/Fri, then the night routine
+  const keys = showerDay ? ["am", "shower", "pm"] : ["am", "pm", "shower"];
+  const showerDone = SKIN.shower.every(s => (dd.skin.shower || {})[s.id]);
+  const nowKey = hour < 15 ? "am" : (showerDay && hour < 21 && !showerDone) ? "shower" : "pm";
   const title = { am:"Morning", pm:"Night", shower:"Shower" };
   const secs = keys.map(k => {
     const ticks = dd.skin[k] || (dd.skin[k] = {});
     const steps = SKIN[k].filter(s => !(s.skipOn || []).includes(wd));
     const skipped = SKIN[k].filter(s => (s.skipOn || []).includes(wd));
     const doneN = steps.filter(s => ticks[s.id]).length;
-    const now = k === "shower" ? (showerDay ? "Today · " : "Mon, Wed, Fri · ") : (k === "am") === isAM ? "Now · " : "";
+    const now = k === nowKey ? "Now · " : k === "shower" ? (showerDay ? "7 pm · " : "Mon, Wed, Fri · ") : "";
     const head = `<div class="sec-h"><h2 class="t-title3">${title[k]}</h2><span class="val t-sub c2">${now}${doneN} of ${steps.length}</span></div>`;
     const foot = skipped.length ? `<p class="sec-f t-foot">${skipped.map(s => esc(s.name)).join(", ")} is skipped today, because the shower already washed your face.</p>` : "";
     return `<section class="sec">${head}<div class="list">${steps.map(s => {
@@ -624,7 +627,7 @@ function skinView(){
     }).join("")}</div>${foot}</section>`;
   }).join("");
   let next = 1; while (!SHOWER_DAYS.includes((wd + next) % 7)) next++;
-  const sub = showerDay ? "Shower day: Nizoral and Triakne on your back" : `Next shower day: ${next === 1 ? "tomorrow" : DAY[(wd + next) % 7]}`;
+  const sub = showerDay ? "Shower day: shower around 7 pm, then the night routine" : `Next shower day: ${next === 1 ? "tomorrow" : DAY[(wd + next) % 7]}`;
   return largeTitle("Skin Care", sub) + secs;
 }
 
