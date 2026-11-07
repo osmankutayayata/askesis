@@ -606,14 +606,14 @@ function skinView(){
   const showerDay = SHOWER_DAYS.includes(wd);
   const isAM = new Date().getHours() < 15;
   const dd = day();
-  const keys = isAM ? ["am", ...(showerDay ? ["shower"] : []), "pm"] : [...(showerDay ? ["shower"] : []), "pm", "am"];
+  const keys = isAM ? ["am", "shower", "pm"] : ["shower", "pm", "am"];
   const title = { am:"Morning", pm:"Night", shower:"Shower" };
   const secs = keys.map(k => {
     const ticks = dd.skin[k] || (dd.skin[k] = {});
     const steps = SKIN[k].filter(s => !(s.skipOn || []).includes(wd));
     const skipped = SKIN[k].filter(s => (s.skipOn || []).includes(wd));
     const doneN = steps.filter(s => ticks[s.id]).length;
-    const now = k === "shower" ? "Today · " : (k === "am") === isAM ? "Now · " : "";
+    const now = k === "shower" ? (showerDay ? "Today · " : "Mon, Wed, Fri · ") : (k === "am") === isAM ? "Now · " : "";
     const head = `<div class="sec-h"><h2 class="t-title3">${title[k]}</h2><span class="val t-sub c2">${now}${doneN} of ${steps.length}</span></div>`;
     const foot = skipped.length ? `<p class="sec-f t-foot">${skipped.map(s => esc(s.name)).join(", ")} is skipped today because it’s a shower day.</p>` : "";
     return `<section class="sec">${head}<div class="list">${steps.map(s => {
