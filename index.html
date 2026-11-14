@@ -191,8 +191,8 @@ button.last:active{opacity:.5}
 
 /* ---------- Liquid Glass tab bar: floating capsule; the selection pill lifts into a lens when pressed or dragged ---------- */
 .tabbar{position:fixed;z-index:9;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));bottom:var(--tabbar-b);pointer-events:none}
-.tabbar-in{pointer-events:auto;position:relative;max-width:440px;margin:0 auto;height:64px;border-radius:32px;padding:4px;display:grid;grid-template-columns:repeat(4,1fr);touch-action:none;-webkit-user-select:none;user-select:none}
-.tab-pill{position:absolute;z-index:0;top:4px;left:4px;height:56px;width:calc((100% - 8px) / 4);border-radius:28px;background:var(--glass-sel);translate:calc(var(--x,0) * 1px) 0;scale:1;transition:translate 460ms cubic-bezier(.32,1.28,.5,1),scale 320ms cubic-bezier(.32,1.28,.5,1),background 220ms ease,box-shadow 220ms ease;pointer-events:none}
+.tabbar-in{pointer-events:auto;position:relative;max-width:440px;margin:0 auto;height:64px;border-radius:32px;padding:4px;display:grid;grid-template-columns:repeat(5,1fr);touch-action:none;-webkit-user-select:none;user-select:none}
+.tab-pill{position:absolute;z-index:0;top:4px;left:4px;height:56px;width:calc((100% - 8px) / 5);border-radius:28px;background:var(--glass-sel);translate:calc(var(--x,0) * 1px) 0;scale:1;transition:translate 460ms cubic-bezier(.32,1.28,.5,1),scale 320ms cubic-bezier(.32,1.28,.5,1),background 220ms ease,box-shadow 220ms ease;pointer-events:none}
 .tabbar-in.pressing .tab-pill{scale:1.2 1.32;background:var(--lens);-webkit-backdrop-filter:blur(1.5px) saturate(1.9) brightness(1.06);backdrop-filter:blur(1.5px) saturate(1.9) brightness(1.06);box-shadow:var(--lens-rim)}
 .tabbar-in.dragging .tab-pill{transition:scale 320ms cubic-bezier(.32,1.28,.5,1),background 220ms ease,box-shadow 220ms ease}
 .tabbar-in.no-anim .tab-pill{transition:none}
@@ -235,6 +235,24 @@ button.last:active{opacity:.5}
 #toast button{height:44px;padding:0 12px;color:var(--tint);font-weight:600}
 body.dock-on #toast{bottom:calc(var(--tabbar-b) + 136px)}
 
+/* ---------- progress ---------- */
+.pill{display:inline-flex;align-items:center;gap:3px;height:24px;padding:0 9px;border-radius:12px;font-size:13px;line-height:16px;font-weight:600;letter-spacing:-.08px;white-space:nowrap;flex:none}
+.pill.up{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--green-text)}
+.pill.down{background:color-mix(in srgb,var(--red) 14%,transparent);color:var(--red)}
+.pill.same,.pill.first{background:var(--fill-3);color:var(--label-2)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.stat{padding:12px 14px;min-width:0}
+.stat+.stat{border-left:.5px solid var(--sep)}
+.stat b{display:block;font:600 22px/28px var(--font-display);letter-spacing:-.3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat span{display:block;font-size:13px;line-height:18px;color:var(--label-2)}
+.wfield{width:104px;flex:none}
+.unit{color:var(--label-2)}
+.wchart{position:relative;height:196px;padding:10px 6px 6px;touch-action:pan-y}
+.wchart svg{display:block;width:100%;height:100%;overflow:visible}
+.wchart .ax{fill:var(--label-2);font-size:11px;font-variant-numeric:tabular-nums}
+.wchart .grid{stroke:var(--sep);stroke-width:.5}
+.wtip{position:absolute;top:4px;transform:translateX(-50%);background:var(--label);color:var(--cell);font-size:13px;line-height:18px;font-weight:600;padding:4px 9px;border-radius:9px;white-space:nowrap;pointer-events:none;font-variant-numeric:tabular-nums}
+.wempty{height:auto;padding:22px 16px;text-align:center;color:var(--label-2)}
 @media (hover:hover) and (pointer:fine){
   button.cell:hover{background:var(--press)}
 }
@@ -268,6 +286,7 @@ body.dock-on #toast{bottom:calc(var(--tabbar-b) + 136px)}
   <button class="tab" role="tab" data-tab="train" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="1.2" y="9" width="3" height="6" rx="1.2"/><rect x="4.4" y="5.8" width="3.6" height="12.4" rx="1.5"/><rect x="8" y="10.8" width="8" height="2.4" rx=".7"/><rect x="16" y="5.8" width="3.6" height="12.4" rx="1.5"/><rect x="19.8" y="9" width="3" height="6" rx="1.2"/></svg><span>Training</span></button>
   <button class="tab" role="tab" data-tab="skin" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4c3.7 4.4 6.7 8.2 6.7 11.6a6.7 6.7 0 0 1-13.4 0c0-3.4 3-7.2 6.7-11.6Z"/></svg><span>Skin</span></button>
   <button class="tab" role="tab" data-tab="upkeep" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.6l1.7 1.7 3.1-3.4M3.5 13.6l1.7 1.7 3.1-3.4M11.5 7h9M11.5 14h9M11.5 20.5h9"/><circle cx="5.5" cy="20.5" r="1.2" fill="currentColor" stroke="none"/></svg><span>Upkeep</span></button>
+  <button class="tab" role="tab" data-tab="progress" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17.5l5.5-5.5 4 3.5L21 7"/><path d="M15.5 7H21v5.5"/><path d="M3 21h18" opacity=".45"/></svg><span>Progress</span></button>
 </div></nav>
 <div id="sheet-root" hidden></div>
 <div id="toast" class="glass" role="status"></div>
@@ -385,7 +404,7 @@ function lsGet(k){ try { const v = localStorage.getItem(k); return v ? JSON.pars
 function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 function normalize(s){
   const d = defaultState();
-  return migrate({ ...d, ...s, tasksV: s?.tasksV || 1, skin:{ am: s?.skin?.am ?? d.skin.am, pm: s?.skin?.pm ?? d.skin.pm }, tasks: Array.isArray(s?.tasks) ? s.tasks : d.tasks, daily: s?.daily ?? {}, trainDays: Array.isArray(s?.trainDays) ? s.trainDays : d.trainDays });
+  return migrate({ ...d, ...s, tasksV: s?.tasksV || 1, skin:{ am: s?.skin?.am ?? d.skin.am, pm: s?.skin?.pm ?? d.skin.pm }, tasks: Array.isArray(s?.tasks) ? s.tasks : d.tasks, daily: s?.daily ?? {}, weights: (s?.weights && typeof s.weights === "object") ? s.weights : {}, trainDays: Array.isArray(s?.trainDays) ? s.trainDays : d.trainDays });
 }
 let S = normalize(lsGet(LS) || defaultState());
 let W = (lsGet(LSW) || []).sort((a,b)=> (b.finishedAt||"").localeCompare(a.finishedAt||""));
@@ -564,17 +583,7 @@ function trainView(){
       <div class="sets"><div class="set set-h"><span>Last</span><span>kg</span><span>Reps</span><span></span></div>${setsHtml}</div>
     </div>`;
   }).join("");
-  const recent = W.slice(0, 8);
-  const recentHtml = `<section class="sec"><div class="sec-h"><h2 class="t-title3">Recent Sessions</h2><span class="val t-sub c2">${W.length} total</span></div>
-    <div class="list">${recent.length ? recent.map(w => {
-      const nEx = Object.keys(w.sets).length, nSets = Object.values(w.sets).reduce((a,s)=>a+s.length,0);
-      return `<button class="cell" data-act="session" data-id="${w.id}"><span class="grow"><span class="ttl">${shortDate(w.date)}</span><div class="sub">${nEx} exercise${nEx===1?"":"s"} · ${nSets} set${nSets===1?"":"s"}</div></span>${ICON.chev}</button>`;
-    }).join("") : `<div class="empty">Finished workouts appear here.</div>`}</div>
-    </section>
-    <section class="sec"><div class="sec-h"><h2 class="t-title3">Backup</h2></div>
-    <div class="list"><button class="cell action" data-act="export">Export Backup</button><label class="cell action" for="restore-file" style="cursor:pointer">Restore from Backup</label></div>
-    <input type="file" id="restore-file" accept="application/json,.json" hidden>
-    <p class="sec-f t-foot" id="sync-note">${esc(syncText())}</p></section>`;
+  const recentHtml = "";
   return largeTitle("Full Body", sub) + sched +
     `<section class="sec"><div class="sec-h"><h2 class="t-title3">Workout</h2></div><div class="list">${cards}</div><p class="sec-f t-foot">Tap a last result to fill it in. ↑ means you beat it.</p></section>` + recentHtml;
 }
@@ -645,15 +654,169 @@ function upkeepView(){
   return largeTitle("Upkeep", sub) + (S.tasks.length ? body : `<div class="list"><div class="empty">No tasks.</div></div>`);
 }
 
+/* ---------- progress: body weight + training history ---------- */
+const OLD_NAMES = {
+  "uni-triceps-ext":"Unilateral Triceps Extension","cable-oh-ext":"Cable Overhead Extension","uni-bayesian-curl":"Unilateral Bayesian Cable Curl",
+  "uni-cable-lateral":"Unilateral Cable Lateral Raise","uni-db-preacher":"Unilateral Dumbbell Preacher Curl","uni-cs-neutral-row":"Unilateral Chest Supported Row",
+  "uni-leg-ext":"Unilateral Leg Extension","uni-standing-calf":"Unilateral Standing Calf Raise","smith-rack-pull":"Smith Machine Rack Pull",
+};
+const exName = id => EX.find(e => e.id === id)?.name || OLD_NAMES[id] || id;
+const bestSet = sets => (sets || []).reduce((b,s) => !b || s.kg > b.kg || (s.kg === b.kg && s.reps > b.reps) ? s : b, null);
+const STATUS = { up:["up","↑ Progressed"], same:["same","= Same"], down:["down","↓ Dropped"], first:["first","First time"] };
+const pill = st => `<span class="pill ${STATUS[st][0]}">${STATUS[st][1]}</span>`;
+// each exercise in each session compared with the previous time you did it: more kg, or same kg and more reps, is progress
+function progressMap(){
+  const asc = W.slice().sort((a,b) => (a.finishedAt || a.date).localeCompare(b.finishedAt || b.date));
+  const prev = {}, out = {};
+  for (const w of asc) {
+    const r = {};
+    for (const [exId, sets] of Object.entries(w.sets || {})) {
+      const cur = bestSet(sets); if (!cur) continue;
+      const p = prev[exId];
+      const st = !p ? "first" : (cur.kg > p.kg || (cur.kg === p.kg && cur.reps > p.reps)) ? "up" : (cur.kg === p.kg && cur.reps === p.reps) ? "same" : "down";
+      r[exId] = { st, cur, prev:p }; prev[exId] = cur;
+    }
+    out[w.id] = r;
+  }
+  return out;
+}
+const countSt = r => { const c = { up:0, same:0, down:0, first:0 }; for (const v of Object.values(r || {})) c[v.st]++; return c; };
+function weightSeries(days){
+  const from = addDays(today(), -days);
+  return Object.entries(S.weights || {}).filter(([d]) => d >= from).sort((a,b) => a[0].localeCompare(b[0]));
+}
+const fmtSigned = n => (n > 0 ? "+" : n < 0 ? "−" : "±") + fmtKg(Math.abs(Math.round(n*10)/10));
+
+function progressView(){
+  const wts = S.weights || {};
+  const t = today();
+  const all = Object.entries(wts).sort((a,b) => a[0].localeCompare(b[0]));
+  const latest = all[all.length - 1];
+  const last7 = all.filter(([d]) => d >= addDays(t, -6));
+  const avg7 = last7.length ? last7.reduce((a,[,v]) => a + v, 0) / last7.length : null;
+  const last30 = all.filter(([d]) => d >= addDays(t, -30));
+  const ch30 = last30.length >= 2 ? last30[last30.length-1][1] - last30[0][1] : null;
+  const sub = latest ? `${fmtKg(latest[1])} kg ${latest[0] === t ? "today" : "on " + shortDate(latest[0])}` : "Weigh in every day to see your trend";
+
+  const weight = `<section class="sec">
+    <div class="sec-h"><h2 class="t-title3">Body Weight</h2><span class="val t-sub c2">${all.length} day${all.length===1?"":"s"} logged</span></div>
+    <div class="list">
+      <label class="cell" for="weight-today"><span class="grow ttl">Today</span>
+        <input class="field wfield" id="weight-today" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="kg" value="${wts[t] != null ? esc(fmtKg(wts[t])) : ""}" aria-label="Today's body weight in kg"><span class="unit">kg</span></label>
+    </div>
+    <div class="list stats">
+      <div class="stat"><span>Latest</span><b>${latest ? fmtKg(latest[1]) : "–"}</b></div>
+      <div class="stat"><span>7-day avg</span><b>${avg7 != null ? fmtKg(Math.round(avg7*10)/10) : "–"}</b></div>
+      <div class="stat"><span>30 days</span><b>${ch30 != null ? fmtSigned(ch30) : "–"}</b></div>
+    </div>
+    <div class="list"><div class="wchart" id="wchart"></div></div>
+    <p class="sec-f t-foot">Last 3 months, in kg. Weigh yourself at the same time each day, ideally in the morning before eating, so the trend is reliable.</p>
+  </section>`;
+
+  const pm = progressMap();
+  const from = addDays(t, -90);
+  const recent = W.filter(w => w.date >= from);
+  let tot = { up:0, same:0, down:0, first:0 };
+  for (const w of recent) { const c = countSt(pm[w.id]); for (const k in tot) tot[k] += c[k]; }
+  const compared = tot.up + tot.same + tot.down;
+  const daysUp = recent.filter(w => countSt(pm[w.id]).up > 0).length;
+
+  const summary = `<section class="sec">
+    <div class="sec-h"><h2 class="t-title3">Last 3 Months</h2></div>
+    <div class="list stats">
+      <div class="stat"><span>Sessions</span><b>${recent.length}</b></div>
+      <div class="stat"><span>Days up</span><b>${daysUp}</b></div>
+      <div class="stat"><span>Lifts up</span><b>${compared ? Math.round(tot.up / compared * 100) + "%" : "–"}</b></div>
+    </div>
+    <p class="sec-f t-foot">Each exercise is compared with the last time you did it. More kg, or the same kg for more reps, counts as progress. Days up: sessions where at least one exercise progressed. Lifts up: share of exercises that progressed.</p>
+  </section>`;
+
+  const sessions = `<section class="sec">
+    <div class="sec-h"><h2 class="t-title3">Training Days</h2><span class="val t-sub c2">${recent.length}</span></div>
+    <div class="list">${recent.length ? recent.map(w => {
+      const c = countSt(pm[w.id]);
+      const parts = [c.up && `${c.up} up`, c.same && `${c.same} same`, c.down && `${c.down} down`, c.first && `${c.first} new`].filter(Boolean).join(" · ");
+      const st = c.up > 0 ? pill("up") : (c.same + c.down > 0) ? `<span class="pill down">No progress</span>` : pill("first");
+      return `<button class="cell" data-act="session" data-id="${w.id}"><span class="grow"><span class="ttl">${shortDate(w.date)}</span><div class="sub">${parts || "No sets"}</div></span>${st}${ICON.chev}</button>`;
+    }).join("") : `<div class="empty">Finished workouts appear here, marked progressed or not.</div>`}</div>
+  </section>`;
+
+  const byEx = `<section class="sec">
+    <div class="sec-h"><h2 class="t-title3">By Exercise</h2></div>
+    <div class="list">${EX.map(ex => {
+      const hits = recent.filter(w => pm[w.id]?.[ex.id]).map(w => pm[w.id][ex.id]);
+      const cmp = hits.filter(h => h.st !== "first");
+      const up = cmp.filter(h => h.st === "up").length;
+      const lastSt = hits.length ? hits[0].st : null;
+      return `<button class="cell" data-act="history" data-ex="${ex.id}"><span class="grow"><span class="ttl">${esc(ex.name)}</span><div class="sub">${cmp.length ? `Progressed ${up} of ${cmp.length} time${cmp.length===1?"":"s"}` : hits.length ? "Done once so far" : "Not done in the last 3 months"}</div></span>${lastSt ? pill(lastSt) : ""}${ICON.chev}</button>`;
+    }).join("")}</div>
+    <p class="sec-f t-foot">The label shows how the exercise went last time.</p>
+  </section>`;
+
+  return largeTitle("Progress", sub) + weight + summary + sessions + byEx + progressFooter();
+}
+
+function drawWeightChart(){
+  const box = document.getElementById("wchart"); if (!box) return;
+  const pts = weightSeries(90).map(([d,v]) => ({ d, v, t: parse(d).getTime() }));
+  if (pts.length < 2) { box.className = "wchart wempty"; box.textContent = pts.length ? "One more day of weigh-ins and the trend line appears here." : "Log today’s weight above to start the chart."; return; }
+  const W_ = box.clientWidth - 12, H_ = box.clientHeight - 16;
+  const L = 34, R = 10, T = 30, B = 22;
+  const t0 = pts[0].t, t1 = pts[pts.length-1].t;
+  let lo = Math.min(...pts.map(p => p.v)), hi = Math.max(...pts.map(p => p.v));
+  const step = (hi - lo) > 6 ? 2 : (hi - lo) > 2.5 ? 1 : 0.5;
+  lo = Math.floor(lo / step) * step - step; hi = Math.ceil(hi / step) * step + step;
+  const x = tt => L + (W_ - L - R) * (t1 === t0 ? 0.5 : (tt - t0) / (t1 - t0));
+  const y = v => T + (H_ - T - B) * (1 - (v - lo) / (hi - lo));
+  const ticks = []; const every = Math.max(step, Math.ceil(((hi - lo) / 3) / step) * step);
+  for (let v = Math.ceil(lo / every) * every; v <= hi + 1e-9; v += every) ticks.push(Math.round(v*10)/10);
+  const path = pts.map((p,i) => `${i ? "L" : "M"}${x(p.t).toFixed(1)} ${y(p.v).toFixed(1)}`).join("");
+  const lastP = pts[pts.length-1];
+  const dots = pts.length <= 31 ? pts.slice(0,-1).map(p => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="2.6" fill="var(--tint)"/>`).join("") : "";
+  box.className = "wchart";
+  box.innerHTML = `<svg width="${W_}" height="${H_}" role="img" aria-label="Body weight over the last 3 months">
+    ${ticks.map(v => `<line class="grid" x1="${L}" x2="${W_ - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/><text class="ax" x="${L - 6}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${fmtKg(v)}</text>`).join("")}
+    <text class="ax" x="${L}" y="${H_ - 4}">${shortDate(pts[0].d).slice(4)}</text>
+    <text class="ax" x="${W_ - R}" y="${H_ - 4}" text-anchor="end">${shortDate(lastP.d).slice(4)}</text>
+    <path d="${path}" fill="none" stroke="var(--tint)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dots}
+    <circle cx="${x(lastP.t).toFixed(1)}" cy="${y(lastP.v).toFixed(1)}" r="5" fill="var(--tint)" stroke="var(--cell)" stroke-width="2"/>
+    <g id="wcross" visibility="hidden"><line x1="0" x2="0" y1="${T - 6}" y2="${H_ - B}" stroke="var(--label-3)" stroke-width="1"/><circle r="5" fill="var(--tint)" stroke="var(--cell)" stroke-width="2"/></g>
+  </svg><div class="wtip" id="wtip" hidden></div>`;
+  const svg = box.querySelector("svg"), cross = box.querySelector("#wcross"), tip = box.querySelector("#wtip");
+  const show = e => {
+    const r = svg.getBoundingClientRect(), mx = e.clientX - r.left;
+    let best = pts[0]; for (const p of pts) if (Math.abs(x(p.t) - mx) < Math.abs(x(best.t) - mx)) best = p;
+    const px = x(best.t), py = y(best.v);
+    cross.setAttribute("visibility", "visible");
+    cross.querySelector("line").setAttribute("x1", px); cross.querySelector("line").setAttribute("x2", px);
+    cross.querySelector("circle").setAttribute("cx", px); cross.querySelector("circle").setAttribute("cy", py);
+    tip.hidden = false; tip.textContent = `${shortDate(best.d)} · ${fmtKg(best.v)} kg`;
+    const tw = tip.offsetWidth / 2; tip.style.left = Math.min(Math.max(px + 6, tw), box.clientWidth - tw) + "px";
+  };
+  const hide = () => { cross.setAttribute("visibility", "hidden"); tip.hidden = true; };
+  box.addEventListener("pointerdown", show); box.addEventListener("pointermove", show);
+  box.addEventListener("pointerleave", hide); box.addEventListener("pointerup", e => { if (e.pointerType !== "mouse") setTimeout(hide, 1600); });
+}
+window.addEventListener("resize", () => { if (ui.tab === "progress") drawWeightChart(); });
+
+function progressFooter(){
+  return `<section class="sec"><div class="sec-h"><h2 class="t-title3">Backup</h2></div>
+    <div class="list"><button class="cell action" data-act="export">Export Backup</button><label class="cell action" for="restore-file" style="cursor:pointer">Restore from Backup</label></div>
+    <input type="file" id="restore-file" accept="application/json,.json" hidden>
+    <p class="sec-f t-foot" id="sync-note">${esc(syncText())}</p></section>`;
+}
+
 function navFor(tab){
   if (tab === "skin") return { title:"Skin Care", r:"" };
   if (tab === "upkeep") return { title:"Upkeep", r:"" };
   if (tab === "train") return { title:"Full Body", r:"" };
+  if (tab === "progress") return { title:"Progress", r:"" };
   return { title:"Diet", r:"" };
 }
 
 function render(){
-  const v = { diet: dietView, train: trainView, skin: skinView, upkeep: upkeepView }[ui.tab];
+  const v = { diet: dietView, train: trainView, skin: skinView, upkeep: upkeepView, progress: progressView }[ui.tab];
   const prevSeg = {};
   view.querySelectorAll(".seg[data-seg]").forEach(s => prevSeg[s.dataset.seg] = s.style.getPropertyValue("--i"));
   view.innerHTML = v();
@@ -671,6 +834,7 @@ function render(){
   placePill();
   renderDock();
   onScroll();
+  if (ui.tab === "progress") drawWeightChart();
 }
 function renderDock(){
   const show = ui.tab === "train" && draftHasData();
@@ -767,20 +931,22 @@ document.addEventListener("visibilitychange", () => {
 /* exercise history sheet */
 function historySheet(exId){
   const ex = EX.find(e => e.id === exId);
-  const rows = W.filter(w => w.sets?.[exId]?.length).slice(0, 20);
+  const pm = progressMap();
+  const rows = W.filter(w => w.sets?.[exId]?.length).slice(0, 40);
   let best = null;
   for (const w of W) for (const s of (w.sets?.[exId] || [])) if (!best || s.kg > best.kg || (s.kg === best.kg && s.reps > best.reps)) best = { ...s, date:w.date };
-  openSheet(`${sheetNav(ex.name, "close")}
+  openSheet(`${sheetNav(ex ? ex.name : exName(exId), "close")}
     ${best ? `<div class="list"><div class="cell"><span class="grow ttl">Heaviest Set</span><span class="val st-good t-headline">${fmtKg(best.kg)} kg × ${best.reps}</span></div></div>` : ""}
     <section class="sec"><div class="sec-h"><h2 class="t-title3">History</h2><span class="val t-sub c2">${rows.length}</span></div>
-    <div class="list">${rows.length ? rows.map(w => `<div class="cell"><span class="grow ttl">${shortDate(w.date)}</span><span class="val">${w.sets[exId].map(s => `${fmtKg(s.kg)} × ${s.reps}`).join(", ")}</span></div>`).join("") : `<div class="empty">Log a set and finish the workout to start the history.</div>`}</div></section>`);
+    <div class="list">${rows.length ? rows.map(w => { const st = pm[w.id]?.[exId]?.st; return `<div class="cell"><span class="grow"><span class="ttl">${shortDate(w.date)}</span><div class="sub">${w.sets[exId].map(s => `${fmtKg(s.kg)} kg × ${s.reps}`).join(", ")}</div></span>${st ? pill(st) : ""}</div>`; }).join("") : `<div class="empty">Log a set and finish the workout to start the history.</div>`}</div></section>`);
 }
 
 /* session sheet */
 function sessionSheet(id){
   const w = W.find(x => x.id === id); if (!w) return;
   let armed = false;
-  const list = EX.filter(e => w.sets[e.id]).map(e => `<div class="cell"><span class="grow ttl">${esc(e.name)}</span><span class="val">${w.sets[e.id].map(s => `${fmtKg(s.kg)} × ${s.reps}`).join(", ")}</span></div>`).join("");
+  const pm = progressMap()[id] || {};
+  const list = Object.keys(w.sets).sort((a,b) => { const ia = EX.findIndex(e => e.id === a), ib = EX.findIndex(e => e.id === b); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }).map(exId => `<div class="cell"><span class="grow"><span class="ttl">${esc(exName(exId))}</span><div class="sub">${w.sets[exId].map(s => `${fmtKg(s.kg)} kg × ${s.reps}`).join(", ")}</div></span>${pm[exId] ? pill(pm[exId].st) : ""}</div>`).join("");
   openSheet(`${sheetNav(shortDate(w.date), "close")}
     <div class="list">${list || `<div class="empty">No sets in this session.</div>`}</div>
     <div class="list"><button class="cell destructive" data-sheet="delete">Delete Session</button></div>`, (act, el) => {
@@ -878,6 +1044,16 @@ view.addEventListener("input", e => {
 view.addEventListener("change", e => {
   if (e.target.id === "restore-file" && e.target.files && e.target.files[0]) { restoreBackup(e.target.files[0]); e.target.value = ""; }
 });
+view.addEventListener("input", e => {
+  if (e.target.id !== "weight-today") return;
+  const t = e.target, clean = t.value.replace(/[^0-9.,]/g, "");
+  if (clean !== t.value) t.value = clean;
+  const v = num(clean);
+  S.weights = S.weights || {};
+  if (!isNaN(v) && v >= 30 && v <= 300) S.weights[today()] = Math.round(v * 10) / 10; else delete S.weights[today()];
+  persist();
+});
+view.addEventListener("change", e => { if (e.target.id === "weight-today") { render(); if (S.weights[today()] != null) toast(`${fmtKg(S.weights[today()])} kg saved for today`); } });
 view.addEventListener("keydown", e => {
   if (e.key !== "Enter" || !e.target.classList.contains("field")) return;
   e.preventDefault();
@@ -927,7 +1103,7 @@ tabBar.addEventListener("pointercancel", endTabDrag);
 window.addEventListener("resize", () => { tabBar.classList.add("no-anim"); placePill(); requestAnimationFrame(() => tabBar.classList.remove("no-anim")); });
 
 /* ---------- routing ---------- */
-const TABS = ["diet","train","skin","upkeep"];
+const TABS = ["diet","train","skin","upkeep","progress"];
 function setTab(t){
   if (!TABS.includes(t)) t = "diet";
   if (ui.tab !== t) { ui.tab = t; ui.dietView = null; window.scrollTo({ top: 0 }); render(); }
