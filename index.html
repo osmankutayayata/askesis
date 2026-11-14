@@ -170,9 +170,9 @@ button.cell:active,.cell:has(> button.tap:active){background:var(--press);transi
 .hint{display:flex;align-items:center;gap:5px;color:var(--green-text);font-weight:600;padding-left:34px}
 .hint svg{width:13px;height:13px}
 .sets{display:flex;flex-direction:column;gap:6px;padding-left:34px}
-.set{display:grid;grid-template-columns:22px minmax(0,1fr) 74px 62px 18px;gap:8px;align-items:center}
+.set{display:grid;grid-template-columns:minmax(0,1fr) 74px 62px 18px;gap:8px;align-items:center}
 .set-h{font-size:12px;line-height:16px;font-weight:500;color:var(--label-2);text-transform:uppercase;letter-spacing:.2px}
-.set-h span:nth-child(1),.set-h span:nth-child(3),.set-h span:nth-child(4){text-align:center}
+.set-h span:nth-child(2),.set-h span:nth-child(3){text-align:center}
 .set-n{color:var(--label-2);font-variant-numeric:tabular-nums;text-align:center;font-size:15px}
 .last{justify-self:start;position:relative;color:var(--tint);font-size:15px;letter-spacing:-.24px;font-variant-numeric:tabular-nums;white-space:nowrap;padding:4px 0}
 .last::after{content:"";position:absolute;inset:-6px -8px}
@@ -275,20 +275,20 @@ body.dock-on #toast{bottom:calc(var(--tabbar-b) + 136px)}
 <script>
 /* ---------- plan data ---------- */
 const EX = [
-  ["uni-triceps-ext","Unilateral Triceps Extension",1],
-  ["cable-oh-ext","Cable Overhead Extension",1],
-  ["uni-bayesian-curl","Unilateral Bayesian Cable Curl",1],
-  ["uni-cable-lateral","Unilateral Cable Lateral Raise",1],
-  ["uni-db-preacher","Unilateral Dumbbell Preacher Curl",1],
-  ["chest-press-machine","Chest Press Machine",2],
-  ["uni-cs-neutral-row","Unilateral Chest Supported Neutral Grip Machine Row",1],
-  ["wide-lat-pulldown","Wide Grip Lat Pulldown",1],
-  ["cs-tbar-kelso","Chest Supported T-Bar Kelso Shrug",1],
-  ["uni-leg-ext","Unilateral Leg Extension",1],
-  ["lying-leg-curl","Lying Leg Curl",1],
-  ["uni-standing-calf","Unilateral Standing Calf Raise",1],
-  ["adductor-machine","Adductor Machine",1],
-  ["smith-rack-pull","Smith Machine Rack Pull",1],
+  ["lateral-raise","Lateral Raise",1],
+  ["front-raise","Front Raise",1],
+  ["reverse-curl","Reverse Curl",1],
+  ["incline-pushdown","Incline Pushdown",1],
+  ["recline-curl","Recline Curl",1],
+  ["cs-tbar-kelso","Kelso Shrug",1],
+  ["high-low-row","High-to-Low Row",1],
+  ["chest-press-machine","Chest Press",1],
+  ["wide-lat-pulldown","Lat Pulldown",1],
+  ["crunch","Crunch",1],
+  ["calf-raise","Calf Raise",1],
+  ["adductor-machine","Hip Adduction",1],
+  ["lying-leg-curl","Leg Curl",1],
+  ["leg-extension","Leg Extension",1],
 ].map(([id,name,sets])=>({id,name,sets,repLo:4,repHi:6}));
 
 const MEALS = {
@@ -551,7 +551,6 @@ function trainView(){
     const setsHtml = Array.from({length: ex.sets}, (_, i) => {
       const ls = l?.sets?.[i], d = draftSet(ex.id, i), [tc, tt] = trend(ls, d);
       return `<div class="set">
-        <span class="set-n">${i+1}</span>
         ${ls ? `<button class="last" data-act="copy-last" data-ex="${ex.id}" data-i="${i}" aria-label="Use last: ${fmtKg(ls.kg)} kg for ${ls.reps} reps">${fmtKg(ls.kg)} × ${ls.reps}</button>` : `<span class="last">–</span>`}
         <input class="field" id="kg-${ex.id}-${i}" data-ex="${ex.id}" data-i="${i}" data-f="kg" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="kg" value="${esc(d.kg)}" aria-label="${esc(ex.name)} set ${i+1} weight in kg">
         <input class="field" id="reps-${ex.id}-${i}" data-ex="${ex.id}" data-i="${i}" data-f="reps" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next" autocomplete="off" placeholder="reps" value="${esc(d.reps)}" aria-label="${esc(ex.name)} set ${i+1} reps">
@@ -560,9 +559,9 @@ function trainView(){
     }).join("");
     return `<div class="ex">
       <button class="ex-head" data-act="history" data-ex="${ex.id}"><span class="ex-idx">${k+1}</span>
-        <span class="grow"><span class="ttl">${esc(ex.name)}</span><div class="sub t-sub c2">${ex.sets} set${ex.sets>1?"s":""} · ${ex.repLo}–${ex.repHi} reps${l?` · last ${shortDate(l.date)}`:""}</div></span>${ICON.chev}</button>
-      ${ready ? `<div class="hint t-foot">${ICON.up}Hit ${ex.repHi} reps last time. Add weight.</div>` : ""}
-      <div class="sets"><div class="set set-h"><span>Set</span><span>Last</span><span>kg</span><span>Reps</span><span></span></div>${setsHtml}</div>
+        <span class="grow"><span class="ttl">${esc(ex.name)}</span>${l?`<div class="sub t-sub c2">Last ${shortDate(l.date)}</div>`:""}</span>${ICON.chev}</button>
+      ${ready ? `<div class="hint t-foot">${ICON.up}Add weight this time.</div>` : ""}
+      <div class="sets"><div class="set set-h"><span>Last</span><span>kg</span><span>Reps</span><span></span></div>${setsHtml}</div>
     </div>`;
   }).join("");
   const recent = W.slice(0, 8);
